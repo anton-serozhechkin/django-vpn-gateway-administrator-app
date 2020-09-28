@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
+<html>
+    <body>
+        <div class="class1">
+        {% if users %}
+          <table border="1">
+            <caption>Users</caption>
+            <tr>
+             <th>Full name</th>
+             <th>Email</th>
+             <th>Company</th>
+             <th>Action</th>
+            </tr>
+            {% for user in users %}
+                <tr>    
+                    <td>{{ user.full_name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.company }}</td>
+                    <td><a href="{% url 'change_user' user_id=user.id%}">Change</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>No enough data for users table</p>
+        {% endif %}
+        </div>
+        <div class="class2">
+          {% if companies %}
+          <table border="1">
+            <caption>Companies</caption>
+            <tr>
+             <th>Company name</th>
+             <th>Traffic limit for a month(in TB)</th>
+            </tr>
+            {% for company in companies %}
+                <tr>    
+                    <td>{{ company.name }}</td>
+                    <td>{{ company.size_limit }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>No enough data for companies table</p>
+        {% endif %}
+        </div>
+        <div class="class3">
+          {% if reports %}
+          <table border="1">
+            <caption>Reports</caption>
+            <tr>
+             <th>Company</th>
+             <th>Was used (in TB)</th>
+             <th>Date start</th>
+             <th>Date end</th>
+            </tr>
+            {% for report in reports %}
+                <tr>    
+                    <td>{{ report.company }}</td>
+                    <td>{{ report.traffic_used }}</td>
+                    <td>{{ report.date_start }}</td>
+                    <td>{{ report.date_end }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>No enough data for reports table</p>
+        {% endif %}
+        </div>
+        </body>
+</html>
