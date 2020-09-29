@@ -1,6 +1,6 @@
 from django.shortcuts import render, reverse, redirect
 from .models import Users, Report, Company
-from .forms import UserChangeForm, CompanyChangeForm
+from .forms import UserForm, CompanyForm
 
 def home(request):
     users = Users.objects.all()
@@ -8,10 +8,22 @@ def home(request):
     reports = Report.objects.all()
     return render(request, 'home.html', locals())
 
+def add_user(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+        else:
+            return redirect('add_user')
+    else:
+        form = UserForm()
+    return render(request, 'add_user.html', locals())
+
 def change_user(request, user_id):
     user = Users.objects.get(pk=user_id)
     if request.method == 'POST':
-        form = UserChangeForm(request.POST, instance=user)
+        form = UserForm(request.POST, instance=user)
         if form.is_valid():
             if not form.has_changed():
                 return redirect('home')
@@ -25,13 +37,25 @@ def change_user(request, user_id):
         else:
             return redirect(reverse('change_user', kwargs={'user_id': user_id}))
     else:
-        form = UserChangeForm(instance=user)
+        form = UserForm(instance=user)
     return render(request, 'change_user.html', locals())
+
+def add_company(request):
+    if request.method == 'POST':
+        form = CompanyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+        else:
+            return redirect('add_company')
+    else:
+        form = CompanyForm()
+    return render(request, 'add_company.html', locals())
 
 def change_company(request, company_id):
     company = Company.objects.get(pk=company_id)
     if request.method == 'POST':
-        form = CompanyChangeForm(request.POST, instance=company)
+        form = CompanyForm(request.POST, instance=company)
         if form.is_valid():
             if not form.has_changed():
                 return redirect('home')
@@ -44,5 +68,5 @@ def change_company(request, company_id):
         else:
             return redirect(reverse('change_company', kwargs={'company_id': company_id}))
     else:
-        form = CompanyChangeForm(instance=company)
+        form = CompanyForm(instance=company)
     return render(request, 'change_company.html', locals())
