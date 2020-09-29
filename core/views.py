@@ -2,6 +2,15 @@ from django.shortcuts import render, reverse, redirect
 from .models import Users, Report, Company
 from .forms import UserForm, CompanyForm
 
+
+def getter_user(user_id):
+    user = Users.objects.get(pk=user_id)
+    return user
+
+def getter_company(company_id):
+    company = Company.objects.get(pk=company_id)
+    return company
+
 def home(request):
     users = Users.objects.all()
     companies = Company.objects.all()
@@ -21,7 +30,7 @@ def add_user(request):
     return render(request, 'add_user.html', locals())
 
 def change_user(request, user_id):
-    user = Users.objects.get(pk=user_id)
+    user = getter_user(user_id)
     if request.method == 'POST':
         form = UserForm(request.POST, instance=user)
         if form.is_valid():
@@ -53,7 +62,7 @@ def add_company(request):
     return render(request, 'add_company.html', locals())
 
 def change_company(request, company_id):
-    company = Company.objects.get(pk=company_id)
+    company = getter_company(company_id)
     if request.method == 'POST':
         form = CompanyForm(request.POST, instance=company)
         if form.is_valid():
@@ -70,3 +79,11 @@ def change_company(request, company_id):
     else:
         form = CompanyForm(instance=company)
     return render(request, 'change_company.html', locals())
+
+def delete_user(request, user_id):
+    getter_user(user_id).delete()
+    return redirect('home')
+
+def delete_company(request, company_id):
+    getter_company(company_id).delete()
+    return redirect('home')

@@ -1,6 +1,6 @@
 from django.db import models
 from datetime import datetime, timedelta
-from django.shortcuts import reverse
+from django.shortcuts import reverse, redirect
 
 class Company(models.Model):
     name = models.CharField('Company name', max_length=30)
@@ -8,7 +8,7 @@ class Company(models.Model):
     
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = 'Company'
         verbose_name_plural = 'Companies'
