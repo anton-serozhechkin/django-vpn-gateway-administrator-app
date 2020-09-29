@@ -1,7 +1,12 @@
-from django import forms
-from .models import *
+from django.forms import ModelForm
+from .models import Users, Company
 
-class UserChangeForm(forms.Form):
-    full_name = forms.CharField()
-    email = forms.EmailField(required=False)
-    company = forms.ModelChoiceField(queryset=Company.objects.all())
+class UserChangeForm(ModelForm):
+    class Meta:
+        model = Users
+        fields = ['full_name', 'email', 'company']
+
+class CompanyChangeForm(ModelForm):
+    class Meta:
+        model = Company
+        fields = ['name', 'size_limit']

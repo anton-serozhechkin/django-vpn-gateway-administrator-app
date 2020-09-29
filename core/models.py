@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime, timedelta
+from django.shortcuts import reverse
 
 class Company(models.Model):
     name = models.CharField('Company name', max_length=30)

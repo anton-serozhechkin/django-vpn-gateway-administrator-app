@@ -38,6 +38,7 @@
                 <tr>    
                     <td>{{ company.name }}</td>
                     <td>{{ company.size_limit }}</td>
+                    <td><a href="{% url 'change_company' company_id=company.id%}">Change</a></td>
                 </tr>
             {% endfor %}
         </table>
