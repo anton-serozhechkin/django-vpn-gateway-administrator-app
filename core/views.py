@@ -1,69 +1,20 @@
 from django.shortcuts import render, reverse, redirect
 from .models import Users, Report, Company, TransferLogs
-from .forms import UserForm, CompanyForm, MonthForm
+from .forms import UserForm, CompanyForm
 from .sub_modules import getter_company, getter_user
-from faker import Faker
 import random
 from datetime import datetime, timedelta
 from decimal import Decimal
-
-
-fake = Faker()
-
-def from_bytes_to_tb(size_traffic):
-    terabite = 1099511627776 / int(size_traffic)
-    return Decimal(round(terabite, 2))
+from .controller import IndexController
 
 
 def home(request):
-    users = Users.objects.all()
-    companies = Company.objects.all()
-    reports = Report.objects.all()
+    controller = IndexController(request)
     if request.method == 'POST':
-        month_form = MonthForm(request.POST)
-        if 'generate_data' in request.POST:
-            for _ in range(2):
-                random_company = Company.objects.order_by('?')[0]
-                new_user = Users.objects.create(full_name=fake.name(),
-                                                email=fake.email(),
-                                                company=random_company)
-                for __ in range(random.randint(50, 200)):
-                    random_date = fake.date_between(start_date='-150d', end_date='today')
-                    random_url = fake.url()
-                    random_size_traffic = fake.random_int(min=100, max=10995116277760)
-                    TransferLogs.objects.create(user=new_user, date=random_date,
-                                                recource=random_url, transferred=random_size_traffic)
-                    report_exist = Report.objects.filter(date_start__month=random_date.month, company=new_user.company)
-                    traffic_used = from_bytes_to_tb(random_size_traffic)
-                    if report_exist:
-                        update_report = Report.objects.get(date_start__month=random_date.month,
-                                                           company=new_user.company)
-                        update_report.traffic_used += traffic_used
-                        update_report.save()
-                    else:
-                        data_end = random_date+timedelta(days=30)
-                        new_report = Report.objects.create(date_start=random_date,
-                                                           date_end=data_end,
-                                                           company=new_user.company,
-                                                           traffic_used=traffic_used)
-            for report in reports:
-                company_limit = Company.objects.get(name=report.company.name).size_limit
-                if report.traffic_used > company_limit:
-                    report.more_than_limit = True
-                    report.exceeding_limit = report.traffic_used - company_limit
-                    report.save()
-            return redirect('home')
-
-        elif 'show_for_period' in  request.POST:
-            if month_form.is_valid():
-                month = month_form.cleaned_data.get('month').month
-                reports = Report.objects.filter(date_start__month=month, more_than_limit=True).order_by('-traffic_used')
-                if not reports.exists():
-                    no_violations = 'No violations were found this month'
-        else:
-            pass
+        users, companies, reports, month_form = controller._prepare_responce_post()
+        return redirect('home')
     else:
-        month_form = MonthForm()
+        users, companies, reports, month_form = controller._prepare_responce_get()
     return render(request, 'home.html', locals())
 
 

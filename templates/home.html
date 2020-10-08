@@ -58,12 +58,12 @@
         </table>
         <a href="{% url 'add_company'%}">Add</a>
         {% else %}
-        <p>No enough data for companies table</p>
+            <p>No enough data for companies table</p>
         {% endif %}
         </div>
         <div class="class3">
-          {% if no_violations or reports %}
-            {% if reports %}
+        {% if reports %}
+            {% if reports != 'No violations were found this month' %}
                 <table border="1">
                   <caption>Reports</caption>
                   <tr>
@@ -77,12 +77,14 @@
                       <tr>    
                           <td>{{ report.company }}</td>
                           <td>{{ report.traffic_used }}</td>
+                          <td>{{ report.date_start }}</td>
+                          <td>{{ report.date_end }}</td>
                           <td>{{ report.exceeding_limit }}</td>
                       </tr>
                   {% endfor %}
                 </table>
             {% else %}
-                <p>{{ no_violations }}</p>
+                <p>{{ reports }}</p>
             {% endif %}
         {% else %}
             <p>No enough data for reports table</p>
