@@ -1,7 +1,17 @@
 <!DOCTYPE html>
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
-<html>
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+    <script>
+        $(function() {
+            $( ".datepicker" ).datepicker();
+        });
+        </script>
+</head>
+    <html>
     <body>
         <div class="class1">
         {% if users %}
@@ -24,6 +34,7 @@
             {% endfor %}
         </table>
         <a href="{% url 'add_user'%}">Add</a>
+        <a href="{% url 'delete_all_user'%}">Delete all</a>
         {% else %}
         <p>No enough data for users table</p>
         {% endif %}
@@ -51,27 +62,40 @@
         {% endif %}
         </div>
         <div class="class3">
-          {% if reports %}
-          <table border="1">
-            <caption>Reports</caption>
-            <tr>
-             <th>Company</th>
-             <th>Was used (in TB)</th>
-             <th>Date start</th>
-             <th>Date end</th>
-            </tr>
-            {% for report in reports %}
-                <tr>    
-                    <td>{{ report.company }}</td>
-                    <td>{{ report.traffic_used }}</td>
-                    <td>{{ report.date_start }}</td>
-                    <td>{{ report.date_end }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+          {% if no_violations or reports %}
+            {% if reports %}
+                <table border="1">
+                  <caption>Reports</caption>
+                  <tr>
+                   <th>Company</th>
+                   <th>Was used (in TB)</th>
+                   <th>Date start</th>
+                   <th>Date end</th>
+                   <th>Exceeding limit</th>
+                  </tr>
+                  {% for report in reports %}
+                      <tr>    
+                          <td>{{ report.company }}</td>
+                          <td>{{ report.traffic_used }}</td>
+                          <td>{{ report.exceeding_limit }}</td>
+                      </tr>
+                  {% endfor %}
+                </table>
+            {% else %}
+                <p>{{ no_violations }}</p>
+            {% endif %}
         {% else %}
-        <p>No enough data for reports table</p>
+            <p>No enough data for reports table</p>
         {% endif %}
+        <form action="{% url 'home' %}" method="POST">
+            {% csrf_token %}
+            <button name="generate_data" type='submit'>Generate data</button>
+        </form>
+        <form action="{% url 'home' %}" method="POST">
+            {% csrf_token %}
+            {{ month_form }}
+            <button name="show_for_period" type='submit'>Show for period</button>
+        </form>
         </div>
         </body>
 </html>

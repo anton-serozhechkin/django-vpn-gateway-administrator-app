@@ -9,4 +9,5 @@ urlpatterns = [
     path('delete-company/<int:company_id>', delete_company, name='delete_company'),
     path('add-user', add_user, name='add_user'),
     path('add-company', add_company, name='add_company'),
+    path('delete-all-user', delete_all_user, name='delete_all_user'),
 ]
