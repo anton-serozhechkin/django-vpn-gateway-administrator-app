@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import Company, Users, TransferLogs, Report
 
-# Register your models here.
+admin.site.register(Company)
+admin.site.register(Users)
+admin.site.register(TransferLogs)
+admin.site.register(Report)

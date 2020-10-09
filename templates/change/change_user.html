@@ -1,0 +1,7 @@
+<form method="post" action="{% url 'change_user' user_id=user.id %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table border="1">
+      {{ form }}
+    </table>
+    <button type="submit">Submit</button>
+  </form>

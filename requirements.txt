@@ -1,2 +1,5 @@
 Django==2.2
 python-dotenv==0.14.0
+Faker==4.1.3
+psycopg2==2.8.6
+mysqlclient==2.0.1
