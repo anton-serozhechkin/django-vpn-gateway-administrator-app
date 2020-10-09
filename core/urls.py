@@ -10,4 +10,5 @@ urlpatterns = [
     path('add-user', add_user, name='add_user'),
     path('add-company', add_company, name='add_company'),
     path('delete-all-user', delete_all_user, name='delete_all_user'),
+    path('delete-all-reports', delete_all_reports, name='delete_all_reports'),
 ]

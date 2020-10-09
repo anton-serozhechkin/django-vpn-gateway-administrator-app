@@ -10,11 +10,7 @@ from .controller import IndexController
 
 def home(request):
     controller = IndexController(request)
-    if request.method == 'POST':
-        users, companies, reports, month_form = controller._prepare_responce_post()
-        return redirect('home')
-    else:
-        users, companies, reports, month_form = controller._prepare_responce_get()
+    users, companies, reports, month_form = controller._responce()
     return render(request, 'home.html', locals())
 
 
@@ -39,6 +35,7 @@ def change_user(request, user_id):
             if not form.has_changed():
                 return redirect('home')
             else:
+                # update instance
                 instance = form.save(commit=False)
                 instance.full_name = form.cleaned_data['full_name']
                 instance.email = form.cleaned_data['email']
@@ -73,6 +70,7 @@ def change_company(request, company_id):
             if not form.has_changed():
                 return redirect('home')
             else:
+                # update instance
                 instance = form.save(commit=False)
                 instance.name = form.cleaned_data['name']
                 instance.size_limit = form.cleaned_data['size_limit']
@@ -84,14 +82,26 @@ def change_company(request, company_id):
         form = CompanyForm(instance=company)
     return render(request, 'change/change_company.html', locals())
 
+
 def delete_user(request, user_id):
+    # delete user by id from request
     getter_user(user_id).delete()
     return redirect('home')
 
+
 def delete_company(request, company_id):
+    # delete company by id from request
     getter_company(company_id).delete()
     return redirect('home')
 
+
 def delete_all_user(request):
+    # delete all users
     Users.objects.all().delete()
+    return redirect('home')
+
+
+def delete_all_reports(request):
+    # delete all reports
+    Report.objects.all().delete()
     return redirect('home')

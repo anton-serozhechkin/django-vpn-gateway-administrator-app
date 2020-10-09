@@ -86,6 +86,7 @@
             {% else %}
                 <p>{{ reports }}</p>
             {% endif %}
+            <a href="{% url 'delete_all_reports' %}">Delete</a>
         {% else %}
             <p>No enough data for reports table</p>
         {% endif %}
@@ -97,6 +98,10 @@
             {% csrf_token %}
             {{ month_form }}
             <button name="show_for_period" type='submit'>Show for period</button>
+        </form>
+        <form action="{% url 'home' %}" method="POST">
+            {% csrf_token %}
+            <button name="show_all_reports" type='submit'>Show all reports</button>
         </form>
         </div>
         </body>
